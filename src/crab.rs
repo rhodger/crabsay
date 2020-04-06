@@ -1,23 +1,31 @@
 pub fn format(text: &str, width: u8) -> String {
     let mut h_border = String::new();
     let mut content = String::new();
-
-    for _ in 0..width {
-        h_border.push('*');
-    }
     
-    let text = wrap(&text, width - 2);
-    let mut lines = text.split("\n");
-    content = format_line_width(
-      &lines.next().expect("INVALID ARGUMENT STRING").to_string(),
-      width);
-
-    for line in lines {
-        let mut formatted_line = line.to_string();
+    if text.chars().count() as u8 > width - 2 {
+        for _ in 0..width {
+            h_border.push('*');
+        }
         
-        formatted_line = format_line_width(&formatted_line, width);
+        let text = wrap(&text, width - 2);
+        let mut lines = text.split("\n");
+        content = format_line_width(
+          &lines.next().expect("INVALID ARGUMENT STRING").to_string(),
+          width);
 
-        content = format!("{}\n{}", content, formatted_line);
+        for line in lines {
+            let mut formatted_line = line.to_string();
+            
+            formatted_line = format_line_width(&formatted_line, width);
+
+            content = format!("{}\n{}", content, formatted_line);
+        }
+    } else {
+        let width = text.chars().count() as u8 + 2;
+        for _ in 0..width {
+            h_border.push('*');
+        }
+        content = format_line_width(text, width);
     }
 
     format!("{}\n{}\n{}", h_border, content, h_border)
