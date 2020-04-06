@@ -1,6 +1,6 @@
 pub fn format(text: &str, width: u8) -> String {
     let mut h_border = String::new();
-    let mut content = String::new();
+    let mut content;
     
     if text.chars().count() as u8 > width - 2 {
         for _ in 0..width {
