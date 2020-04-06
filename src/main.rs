@@ -13,5 +13,5 @@ fn main() {
 
     let text = matches.value_of("text").unwrap();
 
-    println!("{}", crab::format(text));
+    println!("{}", crab::format(text, 80));
 }
