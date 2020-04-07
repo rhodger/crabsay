@@ -1,10 +1,31 @@
+use yansi::Paint;
+
+const CRAB: &str= r#"
+    ( )   @ @    ()
+     \  __| |__  /
+      -/   "   \-
+     /-|       |-\
+    / /-\     /-\ \
+     / /-`---'-\ \  
+      /         \"#;
+
 pub fn format(text: &str, width: u8) -> String {
-    let mut h_border = String::new();
+    if text.chars().count() < 3 {
+        return String::new();
+    }
+
+    let mut top_border = String::new();
+    let mut bot_border = String::new();
     let mut content;
     
     if text.chars().count() as u8 > width - 2 {
-        for _ in 0..width {
-            h_border.push('*');
+        bot_border.push('-');
+        bot_border.push(' ');
+        for i in 0..width {
+            top_border.push('-');
+            if i > 1 {
+                bot_border.push('-');
+            }
         }
         
         let text = wrap(&text, width - 2);
@@ -22,13 +43,18 @@ pub fn format(text: &str, width: u8) -> String {
         }
     } else {
         let width = text.chars().count() as u8 + 2;
-        for _ in 0..width {
-            h_border.push('*');
+        bot_border.push('-');
+        bot_border.push(' ');
+        for i in 0..width {
+            top_border.push('-');
+            if i > 1 {
+                bot_border.push('-');
+            }
         }
         content = format_line_width(text, width);
     }
 
-    format!("{}\n{}\n{}", h_border, content, h_border)
+    format!("{}\n{}\n{}\n\\/\n \\\n{}", top_border, content, bot_border, Paint::red(CRAB).bold())
 }
 
 fn format_line_width(line: &str, width: u8) -> String {
@@ -38,7 +64,7 @@ fn format_line_width(line: &str, width: u8) -> String {
         formatted_line.push(' ');
     }
 
-    format!("*{}*", formatted_line)
+    format!("|{}|", formatted_line)
 }
 
 fn wrap(text: &str, width: u8) -> String {
