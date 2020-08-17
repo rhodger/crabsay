@@ -10,11 +10,14 @@ toolchain installed. A release is coming soon.
 
 ```
 USAGE:
-    crabsay <text>
+    crabsay [OPTIONS] <text>
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
+
+OPTIONS:
+    -l, --length <length>    line length [default: 40]
 
 ARGS:
     <text>    input string

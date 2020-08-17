@@ -1,5 +1,11 @@
+//! This file handles all of the complicated logic.
+//!
+//! In theory only `format` should be called, and it in turn calls each other
+//! function as and when is necessary.
+
 use yansi::Paint;
 
+// ASCII crab ASCII crab
 const CRAB: &str= r#"
     ( )   @ @    ()
      \  __| |__  /
@@ -9,6 +15,10 @@ const CRAB: &str= r#"
      / /-`---'-\ \  
       /         \"#;
 
+/// Takes the input string and the desired maximum line length.
+///
+/// The line length was originally hard-coded, but now is passed by `main`
+/// depending on user input (or lack thereof)
 pub fn format(text: &str, width: u8) -> String {
     if text.chars().count() < 3 {
         return String::new();
@@ -54,9 +64,18 @@ pub fn format(text: &str, width: u8) -> String {
         content = format_line_width(text, width);
     }
 
-    format!("{}\n{}\n{}\n\\/\n \\\n{}", top_border, content, bot_border, Paint::red(CRAB).bold())
+    // An admittedly untidy way of combining the individual components of the
+    // final output.
+    format!(
+        "{}\n{}\n{}\n\\/\n \\\n{}",
+        top_border,
+        content,
+        bot_border,
+        Paint::red(CRAB).bold()
+    )
 }
 
+/// Pads the line out to the necessary length and adds horizontal borders.
 fn format_line_width(line: &str, width: u8) -> String {
     let mut formatted_line = line.to_string();
 
@@ -67,6 +86,14 @@ fn format_line_width(line: &str, width: u8) -> String {
     format!("|{}|", formatted_line)
 }
 
+/// Adds linebreaks into the text at appropriate positions
+///
+/// Linebreaks are put into positions to ensure that each line is no longer
+/// than the defined maximum length (even once borders are added for the speech
+/// box) and that words are never broken. If a word must be broken for this to
+/// work (i.e its longer than can fit onto a single line) then the program fails
+/// with an error message - this is functionality to be potentially implemented
+/// at a later date.
 fn wrap(text: &str, width: u8) -> String {
     let mut wrapped = String::new();
     let mut line = String::new();
